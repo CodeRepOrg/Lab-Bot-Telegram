@@ -78,11 +78,11 @@ api.on('update', (update) => {
                     sessionId: sessionO.result.session_id,
                     input: {
                         message_type: 'text',
-                        text: update.message.chat.text
+                        text: update.message.text
                     }
                 })
                 .then(resp => {
-                    console.log(resp)
+                    console.log(JSON.stringify(resp))
                     api.sendMessage({
                         chat_id: chat_id,
                         text: resp.result.output.generic[0].text
@@ -105,11 +105,11 @@ api.on('update', (update) => {
                 sessionId: session,
                 input: {
                     message_type: 'text',
-                    text: update.message.chat.text
+                    text: update.message.text
                 }
             })
             .then(resp => {
-                console.log(resp)
+                console.log(JSON.stringify(resp))
                 api.sendMessage({
                     chat_id: chat_id,
                     text: resp.result.output.generic[0].text
