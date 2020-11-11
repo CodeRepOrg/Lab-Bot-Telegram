@@ -55,7 +55,35 @@ api.on('update', (update) => {
             .then(buffer_data => {
                 // fs.writeFileSync('./a.pdf', buffer_data)
                 doCreateObject(buffer_data, update.message.document.file_name)
-                    .then(ok => console.log('ok'))
+                    .then(ok => {
+                        api.sendMessage({
+                            chat_id: chat_id,
+                            text: 'Upload realizado com sucesso'
+                        });
+                        fetch(process.env.API_URL, {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ name: update.message.document.file_name }),
+                            json: true
+                        })
+                        .then(send => send.json())
+                        .then(resp_api => {
+                            console.log(JSON.stringify(resp_api))
+                            api.sendMessage({
+                                chat_id: chat_id,
+                                text: resp_api.msg
+                            });
+                        })
+                        .catch(err_api => {
+                            console.error(JSON.stringify(err_api));
+                            api.sendMessage({
+                                chat_id: chat_id,
+                                text: 'Não foi possivel extrair informações do documento'
+                            });
+                        })
+                    })
                     .catch(not_ok => console.error(not_ok))
             })
             .catch(error_fetch => console.error(error_fetch));
